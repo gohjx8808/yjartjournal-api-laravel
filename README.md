@@ -1,0 +1,1 @@
+# yj_artjournal_api
