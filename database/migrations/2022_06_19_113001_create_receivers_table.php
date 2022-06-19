@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('receivers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->dateTime('date_of_birth');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->char('gender', 1);
+            $table->string('email');
             $table->unsignedInteger('country_id');
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
             $table->unsignedInteger('phone_number');
@@ -34,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('receivers');
     }
 };

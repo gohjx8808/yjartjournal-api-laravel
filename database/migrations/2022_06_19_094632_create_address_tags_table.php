@@ -1,5 +1,6 @@
 <?php
 
+use Database\Seeders\AddressTagListSeeder;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,18 +14,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('address_tags', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->dateTime('date_of_birth');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->char('gender', 1);
-            $table->unsignedInteger('country_id');
-            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
-            $table->unsignedInteger('phone_number');
             $table->timestamps();
         });
+
+        $addressTagSeeder = new AddressTagListSeeder();
+        $addressTagSeeder->run();
     }
 
     /**
@@ -34,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('address_tags');
     }
 };
