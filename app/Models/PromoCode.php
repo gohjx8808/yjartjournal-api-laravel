@@ -9,5 +9,5 @@ class PromoCode extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['code', 'amount', 'promo_type_id', 'start_at', 'expired_at'];
+    protected $fillable = ['code', 'amount', 'promo_type_id', 'usage_limit', 'start_at', 'expired_at'];
 }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedInteger('amount');
             $table->unsignedInteger('promo_type_id');
             $table->foreign('promo_type_id')->references('id')->on('promo_types')->onDelete('cascade');
+            $table->unsignedInteger('usage_limit');
             $table->dateTime('start_at');
             $table->dateTime('expired_at');
             $table->timestamps();
