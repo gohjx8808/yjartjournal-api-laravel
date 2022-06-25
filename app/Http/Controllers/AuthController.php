@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SignInRequest;
 use App\Http\Requests\SignUpRequest;
 use App\Http\Services\AuthService;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -22,6 +23,12 @@ class AuthController extends Controller
         if (!$response['success']) {
             return response($response, 422);
         }
+
+        return response($response);
+    }
+
+    public static function signOut(Request $request){
+        $response = AuthService::signOut($request);
 
         return response($response);
     }

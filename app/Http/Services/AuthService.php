@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Http\Repositories\AuthRepository;
 use App\Http\Requests\SignInRequest;
 use App\Http\Requests\SignUpRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService
@@ -52,5 +53,13 @@ class AuthService
         ];
 
         return ['success' => true, 'data' => $data];
+    }
+
+    public static function signOut()
+    {
+        $user = Auth::user();
+        $user->tokens()->delete();
+
+        return ['msg' => 'User logged out'];
     }
 }
