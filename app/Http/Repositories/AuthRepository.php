@@ -30,4 +30,14 @@ class AuthRepository
             'role_id' => Role::CUSTOMER
         ]);
     }
+
+    public static function getUserByEmail(string $email)
+    {
+        return User::where('email', $email)->first();
+    }
+
+    public static function createAccessToken($user)
+    {
+        return $user->createToken('apiToken')->plainTextToken;
+    }
 }
