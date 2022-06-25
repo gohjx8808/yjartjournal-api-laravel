@@ -10,4 +10,7 @@ class Role extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+
+    const ADMIN = 1;
+    const CUSTOMER = 2;
 }
