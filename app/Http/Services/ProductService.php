@@ -3,12 +3,13 @@
 namespace App\Http\Services;
 
 use App\Contentful\ContentfulAPI;
+use App\Http\Repositories\ProductRepository;
 use App\Http\Requests\GetProductDetailsRequest;
 use Contentful\RichText\Renderer;
 
 class ProductService
 {
-    public function getAllProducts()
+    public static function getAllProducts()
     {
         $contentful = new ContentfulAPI();
         $products = $contentful->getAllProducts();
@@ -65,5 +66,16 @@ class ProductService
                 'url' => $img->getFile()->getUrl()
             ];
         });
+    }
+
+    public static function getAllSortByOptions()
+    {
+        $options = ProductRepository::getAllSortByOptions();
+
+        $optionList = $options->map(function ($option) {
+            return ['value' => $option->id, 'label' => $option->name];
+        });
+
+        return $optionList;
     }
 }

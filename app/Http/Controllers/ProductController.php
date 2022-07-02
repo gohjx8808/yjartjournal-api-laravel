@@ -9,14 +9,20 @@ class ProductController extends Controller
 {
     public static function getAllProducts()
     {
-        $response = (new ProductService)->getAllProducts();
+        $response =  ProductService::getAllProducts();
 
         return response($response);
     }
 
     public static function getProductDetails(GetProductDetailsRequest $request)
     {
-        $response = (new ProductService)->getProductDetails($request);
+        $response = ProductService::getProductDetails($request);
+
+        return response($response);
+    }
+
+    public static function getSortByOptions(){
+        $response = ProductService::getAllSortByOptions();
 
         return response($response);
     }

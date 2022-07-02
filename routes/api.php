@@ -23,6 +23,7 @@ Route::post('sign-in', [AuthController::class, 'signIn'])->name('auth.signIn');
 Route::group(['prefix' => 'products'], function () {
     Route::get('/', [ProductController::class, 'getAllProducts'])->name('products.getAll');
     Route::post('/details', [ProductController::class, 'getProductDetails'])->name('products.getProductDetails');
+    Route::get('/sort-by-options', [ProductController::class, 'getSortByOptions'])->name('products.getSortByOptions');  
 });
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
