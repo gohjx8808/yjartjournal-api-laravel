@@ -4,10 +4,7 @@ namespace App\Http\Services;
 
 use App\Contentful\ContentfulAPI;
 use App\Http\Requests\GetProductDetailsRequest;
-use Contentful\Delivery\Client;
-use Contentful\Delivery\Query;
 use Contentful\RichText\Renderer;
-use Exception;
 
 class ProductService
 {
