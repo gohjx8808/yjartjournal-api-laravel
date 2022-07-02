@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Contentful\ContentfulAPI;
+use App\Http\Requests\GetProductDetailsRequest;
 use Contentful\Delivery\Client;
 use Contentful\Delivery\Query;
 use Contentful\RichText\Renderer;
@@ -12,28 +13,19 @@ class ProductService
 {
     public function getAllProducts()
     {
-        $renderer = new Renderer();
-
         $contentful = new ContentfulAPI();
-        $query = new Query();
-        $query->setContentType('products');
-        $products = $contentful->getAllProducts($query);
+        $products = $contentful->getAllProducts();
 
         $productList = [];
 
         foreach ($products as $product) {
             $productImages = $product->productImage;
-            $imgURLs = collect($productImages)->map(function ($img) {
-                return [
-                    'filename' => $img->getFile()->getFilename(),
-                    'url' => $img->getFile()->getUrl()
-                ];
-            });
+
             $productData = [
+                'id' => $product->getId(),
                 'name' => $product->name,
-                'images' => $imgURLs,
+                'images' => self::getProductImagesLinks($productImages),
                 'price' => $product->price,
-                'description' => $renderer->render($product->contentDescription),
                 'category' => $product->category,
                 'discountedPrice' => $product->discountedPrice
             ];
@@ -41,6 +33,40 @@ class ProductService
             array_push($productList, $productData);
         }
 
-        dd($productList);
+        return $productList;
+    }
+
+    public static function getProductDetails(GetProductDetailsRequest $request)
+    {
+        $productId = $request->productId;
+
+        $contentful = new ContentfulAPI();
+        $details = $contentful->getSingleProduct($productId);
+
+        $renderer = new Renderer();
+
+        $productImages = $details->productImage;
+
+        $productDetails = [
+            'id' => $details->getId(),
+            'name' => $details->name,
+            'images' => self::getProductImagesLinks($productImages),
+            'price' => $details->price,
+            'description' => $renderer->render($details->contentDescription),
+            'category' => $details->category,
+            'discountedPrice' => $details->discountedPrice
+        ];
+
+        return $productDetails;
+    }
+
+    public static function getProductImagesLinks($productImages)
+    {
+        return collect($productImages)->map(function ($img) {
+            return [
+                'filename' => $img->getFile()->getFilename(),
+                'url' => $img->getFile()->getUrl()
+            ];
+        });
     }
 }
