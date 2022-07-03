@@ -36,14 +36,19 @@ class ProductService
                 'name' => $product->name,
                 'images' => self::getProductImagesLinks($productImages),
                 'price' => $product->price,
-                'category' => $product->category,
+                'category' => ucwords($product->category),
                 'discountedPrice' => $product->discountedPrice
             ];
 
             return $productData;
-        });
+        })->groupBy('category');
 
-        return $productList;
+        $data = [
+            'products' => $productList,
+            'categories' => $productList->keys()
+        ];
+
+        return $data;
     }
 
     public static function getProductDetails(GetProductDetailsRequest $request)
