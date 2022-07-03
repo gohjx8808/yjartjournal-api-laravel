@@ -24,7 +24,8 @@ class ProductService
 
         if (!empty($nameSearch)) {
             $products = $products->filter(function ($product) use ($nameSearch) {
-                if (stripos($product['name'], $nameSearch)) {
+                $occurance = stripos($product->name, $nameSearch);
+                if ($occurance || $occurance === 0) {
                     return $product;
                 };
             })->values();
@@ -119,5 +120,30 @@ class ProductService
             case SortByOption::HIGH_TO_LOW:
                 return '-fields.price';
         }
+    }
+
+    public static function getProductGalleryImages()
+    {
+        $contentful = new ContentfulAPI();
+
+        $images = $contentful->getImageGallery();
+
+        $imageGallery = [];
+
+        $images->map(function ($image) use (&$imageGallery) {
+            $productImages = self::getProductImagesLinks($image->productPhoto1);
+
+            $formattedImages = $productImages->map(function ($parsedImg) use ($image, &$imageGallery) {
+                array_push($imageGallery, [
+                    'row' => $image->row,
+                    'col' => $image->column,
+                    'images' => $parsedImg,
+                ]);
+            });
+
+            return $formattedImages;
+        });
+
+        return $imageGallery;
     }
 }

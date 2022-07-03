@@ -14,7 +14,7 @@ class ContentfulAPI
         $this->client = new Client(config('contentful.delivery.token'), config('contentful.delivery.space'));
     }
 
-    public function getAllProducts(string $orderByKeyword)
+    public function getAllProducts(string $orderByKeyword = '')
     {
         $query = new Query();
         $query->setContentType('products')->orderBy($orderByKeyword);
@@ -28,5 +28,14 @@ class ContentfulAPI
         $entry = $this->client->getEntry($id);
 
         return $entry;
+    }
+
+    public function getImageGallery()
+    {
+        $query = new Query();
+        $query->setContentType('gallery');
+        $gallery = $this->client->getEntries($query);
+
+        return collect($gallery->getItems());
     }
 }

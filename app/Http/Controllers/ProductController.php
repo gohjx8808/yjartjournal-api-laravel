@@ -22,8 +22,16 @@ class ProductController extends Controller
         return response($response);
     }
 
-    public static function getSortByOptions(){
+    public static function getSortByOptions()
+    {
         $response = ProductService::getAllSortByOptions();
+
+        return response($response);
+    }
+
+    public static function getImageGallery()
+    {
+        $response = ProductService::getProductGalleryImages();
 
         return response($response);
     }
