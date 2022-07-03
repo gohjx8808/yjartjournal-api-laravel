@@ -38,6 +38,6 @@ class AuthRepository
 
     public static function createAccessToken($user)
     {
-        return $user->createToken('apiToken')->plainTextToken;
+        return $user->createToken('apiToken',['role-customer'])->plainTextToken;
     }
 }

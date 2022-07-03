@@ -27,7 +27,7 @@ Route::group(['prefix' => 'products'], function () {
     Route::get('/imageGallery', [ProductController::class, 'getImageGallery'])->name('products.getImageGallery');
 });
 
-Route::group(['middleware' => ['auth:sanctum']], function () {
+Route::group(['middleware' => ['auth:sanctum','abilities:role-customer']], function () {
     Route::post('sign-out', [AuthController::class, 'signOut']);
 });
 
