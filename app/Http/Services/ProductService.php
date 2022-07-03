@@ -4,19 +4,31 @@ namespace App\Http\Services;
 
 use App\Contentful\ContentfulAPI;
 use App\Http\Repositories\ProductRepository;
+use App\Http\Requests\GetAllProductsRequest;
 use App\Http\Requests\GetProductDetailsRequest;
+use App\Models\SortByOption;
 use Contentful\RichText\Renderer;
 
 class ProductService
 {
-    public static function getAllProducts()
+    public static function getAllProducts(GetAllProductsRequest $request)
     {
         $contentful = new ContentfulAPI();
-        $products = $contentful->getAllProducts();
+        $sortById = $request->sortBy;
+        $nameSearch = $request->nameSearch;
 
-        $productList = [];
+        $sortByKeyword = self::getContentfulOrderByKeyword($sortById);
+        $products = $contentful->getAllProducts($sortByKeyword);
 
-        foreach ($products as $product) {
+        if (!empty($nameSearch)) {
+            $products = $products->filter(function ($product) use ($nameSearch) {
+                if (stripos($product['name'], $nameSearch)) {
+                    return $product;
+                };
+            })->values();
+        }
+
+        $productList = $products->map(function ($product) {
             $productImages = $product->productImage;
 
             $productData = [
@@ -28,8 +40,8 @@ class ProductService
                 'discountedPrice' => $product->discountedPrice
             ];
 
-            array_push($productList, $productData);
-        }
+            return $productData;
+        });
 
         return $productList;
     }
@@ -77,5 +89,19 @@ class ProductService
         });
 
         return $optionList;
+    }
+
+    public static function getContentfulOrderByKeyword(int $sortById)
+    {
+        switch ($sortById) {
+            case SortByOption::A_TO_Z:
+                return 'fields.name';
+            case SortByOption::Z_TO_A:
+                return '-fields.name';
+            case SortByOption::LOW_TO_HIGH:
+                return 'fields.price';
+            case SortByOption::HIGH_TO_LOW:
+                return '-fields.price';
+        }
     }
 }

@@ -14,13 +14,13 @@ class ContentfulAPI
         $this->client = new Client(config('contentful.delivery.token'), config('contentful.delivery.space'));
     }
 
-    public function getAllProducts()
+    public function getAllProducts(string $orderByKeyword)
     {
         $query = new Query();
-        $query->setContentType('products');
+        $query->setContentType('products')->orderBy($orderByKeyword);
         $entry = $this->client->getEntries($query);
 
-        return $entry;
+        return collect($entry->getItems());
     }
 
     public function getSingleProduct(string $id)

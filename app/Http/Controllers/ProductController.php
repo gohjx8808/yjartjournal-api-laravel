@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GetAllProductsRequest;
 use App\Http\Requests\GetProductDetailsRequest;
 use App\Http\Services\ProductService;
 
 class ProductController extends Controller
 {
-    public static function getAllProducts()
+    public static function getAllProducts(GetAllProductsRequest $request)
     {
-        $response =  ProductService::getAllProducts();
+        $response =  ProductService::getAllProducts($request);
 
         return response($response);
     }
