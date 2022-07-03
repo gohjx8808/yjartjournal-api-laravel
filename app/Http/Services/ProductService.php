@@ -20,6 +20,8 @@ class ProductService
         $sortByKeyword = self::getContentfulOrderByKeyword($sortById);
         $products = $contentful->getAllProducts($sortByKeyword);
 
+        $categories = $products->groupBy('category')->keys();
+
         if (!empty($nameSearch)) {
             $products = $products->filter(function ($product) use ($nameSearch) {
                 if (stripos($product['name'], $nameSearch)) {
@@ -41,11 +43,20 @@ class ProductService
             ];
 
             return $productData;
-        })->groupBy('category');
+        });
+
+        $categories = $categories->map(function ($category) use ($productList) {
+            $formattedCategory = ucwords($category);
+            $availableKeys = $productList->groupBy('category')->keys();
+            if ($availableKeys->contains($formattedCategory)) {
+                return [$formattedCategory => true];
+            }
+            return [$formattedCategory => false];
+        });
 
         $data = [
             'products' => $productList,
-            'categories' => $productList->keys()
+            'categories' => $categories,
         ];
 
         return $data;
