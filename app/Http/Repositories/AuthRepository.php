@@ -23,11 +23,11 @@ class AuthRepository
         ]);
     }
 
-    public static function createUserRole(int $userId)
+    public static function createUserRole(int $userId, int $role)
     {
         RoleUser::firstOrCreate([
             'user_id' => $userId,
-            'role_id' => Role::CUSTOMER
+            'role_id' => $role
         ]);
     }
 
@@ -36,8 +36,13 @@ class AuthRepository
         return User::where('email', $email)->first();
     }
 
-    public static function createAccessToken($user)
+    public static function getUserRoleByUserId($userId)
     {
-        return $user->createToken('apiToken',['role-customer'])->plainTextToken;
+        return RoleUser::where('user_id', $userId)->pluck('role_id')->toArray();
+    }
+
+    public static function createAccessToken($user, $tokenPermissions)
+    {
+        return $user->createToken('apiToken', $tokenPermissions)->plainTextToken;
     }
 }

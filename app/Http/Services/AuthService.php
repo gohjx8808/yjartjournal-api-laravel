@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Http\Repositories\AuthRepository;
 use App\Http\Requests\SignInRequest;
 use App\Http\Requests\SignUpRequest;
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,13 +14,11 @@ class AuthService
     public static function signUp(SignUpRequest $request)
     {
         $user = AuthRepository::createUser($request);
-        $token = AuthRepository::createAccessToken($user);
 
-        AuthRepository::createUserRole($user->id);
+        AuthRepository::createUserRole($user->id, Role::CUSTOMER);
 
         return [
             'user' => $user,
-            'token' => $token
         ];
     }
 
@@ -30,22 +29,26 @@ class AuthService
 
         $user = AuthRepository::getUserByEmail($email);
 
-        if (!isset($user)) {
-            return [
-                'success' => false,
-                'msg' => 'Incorrect username or password'
-            ];
-        }
-
         $isPasswordCorrect = Hash::check($password, $user->password);
-        if (!$isPasswordCorrect) {
+        if (!isset($user) || !$isPasswordCorrect) {
             return [
                 'success' => false,
                 'msg' => 'Incorrect username or password'
             ];
         }
 
-        $token = AuthRepository::createAccessToken($user);
+        $userRoles = AuthRepository::getUserRoleByUserId($user->id);
+
+        $tokenPermissions = [];
+
+        if (in_array(Role::ADMIN, $userRoles)) {
+            array_push($tokenPermissions, 'role-admin');
+        }
+        if (in_array(Role::CUSTOMER, $userRoles)) {
+            array_push($tokenPermissions, 'role-customer');
+        }
+
+        $token = AuthRepository::createAccessToken($user, $tokenPermissions);
 
         $data = [
             'user' => $user,
