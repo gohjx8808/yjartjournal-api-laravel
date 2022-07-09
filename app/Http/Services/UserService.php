@@ -27,15 +27,10 @@ class UserService
     {
         $userId = Auth::id();
 
-        $userDetails = UserRepository::getUserById($userId);
+        UserRepository::updateUserDetails($userId, $request);
 
         return [
-            'id' => $userDetails->id,
-            'name' => $userDetails->name,
-            'dob' => $userDetails->date_of_birth,
-            'email' => $userDetails->email,
-            'gender' => $userDetails->gender,
-            'phoneNo' => $userDetails['country']->phone_code . $userDetails->phone_number,
+            'msg' => 'ok'
         ];
     }
 }
