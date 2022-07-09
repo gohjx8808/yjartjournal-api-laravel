@@ -22,7 +22,7 @@ return new class extends Migration
             $table->char('gender', 1);
             $table->unsignedInteger('country_id');
             $table->foreign('country_id')->references('id')->on('countries')->onUpdate('cascade')->onDelete('restrict');
-            $table->unsignedInteger('phone_number');
+            $table->string('phone_number');
             $table->rememberToken();
             $table->timestamps();
         });

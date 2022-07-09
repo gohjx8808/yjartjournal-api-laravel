@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,8 +28,12 @@ Route::group(['prefix' => 'products'], function () {
     Route::get('/imageGallery', [ProductController::class, 'getImageGallery'])->name('products.getImageGallery');
 });
 
-Route::group(['middleware' => ['auth:sanctum','abilities:role-customer']], function () {
-    Route::post('sign-out', [AuthController::class, 'signOut']);
+Route::group(['middleware' => ['auth:sanctum', 'abilities:role-customer']], function () {
+    Route::post('sign-out', [AuthController::class, 'signOut'])->name('auth.signOut');
+
+    Route::group(['prefix' => 'account'], function () {
+        Route::post('details', [UserController::class, 'getAccountDetails'])->name('account.getDetails');
+    });
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
