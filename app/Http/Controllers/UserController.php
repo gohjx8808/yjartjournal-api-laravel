@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\GetAccountDetailsRequest;
+use App\Http\Requests\UpdateAccountDetailsRequest;
 use App\Http\Services\UserService;
 
 class UserController extends Controller
 {
-    public static function getAccountDetails(GetAccountDetailsRequest $request)
+    public static function getAccountDetails()
     {
-        $response = UserService::getAccountDetails($request);
+        $response = UserService::getAccountDetails();
+
+        return response($response);
+    }
+
+    public static function updateAccountDetails(UpdateAccountDetailsRequest $request)
+    {
+        $response = UserService::updateAccountDetails($request);
 
         return response($response);
     }

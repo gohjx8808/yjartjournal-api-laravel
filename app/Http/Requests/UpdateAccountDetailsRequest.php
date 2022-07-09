@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-class GetAccountDetailsRequest extends CustomRequest
+class UpdateAccountDetailsRequest extends CustomRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,11 @@ class GetAccountDetailsRequest extends CustomRequest
     public function rules()
     {
         return [
-            'userId' => 'integer|required'
+            'fullName' => 'required|string',
+            'gender' => 'required|string',
+            'countryCode' => 'required|integer',
+            'phoneNumber' => 'required|integer',
+            'dob' => 'required|date'
         ];
     }
 }

@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth:sanctum', 'abilities:role-customer']], func
 
     Route::group(['prefix' => 'account'], function () {
         Route::post('details', [UserController::class, 'getAccountDetails'])->name('account.getDetails');
+        Route::post('update', [UserController::class, 'updateAccountDetails'])->name('account.updateDetails');
     });
 });
 
