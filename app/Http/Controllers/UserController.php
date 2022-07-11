@@ -20,4 +20,11 @@ class UserController extends Controller
 
         return response($response);
     }
+
+    public static function getAccountOptions()
+    {
+        $response = UserService::accountOptions();
+
+        return response($response);
+    }
 }

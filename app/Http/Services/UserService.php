@@ -33,4 +33,23 @@ class UserService
             'msg' => 'ok'
         ];
     }
+
+    public static function accountOptions()
+    {
+        $countries = UserRepository::getAllCountries();
+
+        $countryCodes = $countries->map(function ($country) {
+            return ['id' => $country->id, 'iso2' => $country->iso2, 'phoneCode' => $country->phone_code];
+        });
+
+        $genders = [
+            ['value' => 'M', 'label' => 'Male'],
+            ['value' => 'F', 'label' => 'Female']
+        ];
+
+        return [
+            'countryCodes' => $countryCodes,
+            'genders' => $genders
+        ];
+    }
 }
