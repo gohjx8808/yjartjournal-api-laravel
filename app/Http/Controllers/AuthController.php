@@ -9,6 +9,13 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+    public static function getSignUpOptions()
+    {
+        $response = AuthService::signUpOptions();
+
+        return response($response);
+    }
+
     public static function signUp(SignUpRequest $request)
     {
         $response = AuthService::signUp($request);

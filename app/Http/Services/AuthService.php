@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Http\Repositories\AuthRepository;
+use App\Http\Repositories\UserRepository;
 use App\Http\Requests\SignInRequest;
 use App\Http\Requests\SignUpRequest;
 use App\Models\Role;
@@ -11,6 +12,19 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
+    public static function signUpOptions()
+    {
+        $countries = UserRepository::getAllCountries();
+
+        $countryCodes = $countries->map(function ($country) {
+            return ['id' => $country->id, 'iso2' => $country->iso2, 'phoneCode' => $country->phone_code];
+        });
+
+        return [
+            'countryCodes' => $countryCodes,
+        ];
+    }
+
     public static function signUp(SignUpRequest $request)
     {
         $user = AuthRepository::createUser($request);

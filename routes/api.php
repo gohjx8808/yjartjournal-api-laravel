@@ -17,7 +17,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('sign-up', [AuthController::class, 'signUp'])->name('auth.signUp');
+Route::group(['prefix' => 'sign-up'], function () {
+    Route::get('/options', [AuthController::class, 'getSignUpOptions'])->name('auth.getSignUpOptions');
+    Route::post('/submit', [AuthController::class, 'signUp'])->name('auth.signUp');
+});
 
 Route::post('sign-in', [AuthController::class, 'signIn'])->name('auth.signIn');
 

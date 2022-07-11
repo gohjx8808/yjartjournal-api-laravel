@@ -3,6 +3,7 @@
 namespace App\Http\Repositories;
 
 use App\Http\Requests\UpdateAccountDetailsRequest;
+use App\Models\Country;
 use App\Models\User;
 use Carbon\Carbon;
 
@@ -22,5 +23,10 @@ class UserRepository
             'phone_number' => $request->phoneNumber,
             'date_of_birth' => Carbon::parse($request->dob),
         ]);
+    }
+
+    public static function getAllCountries()
+    {
+        return Country::get();
     }
 }
