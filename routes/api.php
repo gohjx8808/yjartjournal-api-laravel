@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
@@ -36,6 +37,10 @@ Route::group(['middleware' => ['auth:sanctum', 'abilities:role-customer']], func
     Route::group(['prefix' => 'account'], function () {
         Route::post('details', [UserController::class, 'getAccountDetails'])->name('account.getDetails');
         Route::post('update', [UserController::class, 'updateAccountDetails'])->name('account.updateDetails');
+
+        Route::group(['prefix' => 'address'], function () {
+            Route::get('modal-options', [AddressController::class, 'getAddressModalOptions'])->name('address.getModalOptions');
+        });
     });
 });
 
