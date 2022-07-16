@@ -40,6 +40,7 @@ Route::group(['middleware' => ['auth:sanctum', 'abilities:role-customer']], func
 
         Route::group(['prefix' => 'address'], function () {
             Route::get('modal-options', [AddressController::class, 'getAddressModalOptions'])->name('address.getModalOptions');
+            Route::post('add', [AddressController::class, 'addAddress'])->name('address.add');
         });
     });
 });

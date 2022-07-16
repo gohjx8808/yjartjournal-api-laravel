@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email');
             $table->unsignedInteger('country_id');
             $table->foreign('country_id')->references('id')->on('countries')->onUpdate('cascade')->onDelete('restrict');
-            $table->unsignedInteger('phone_number');
+            $table->string('phone_number');
             $table->timestamps();
         });
     }

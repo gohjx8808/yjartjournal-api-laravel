@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('receiver_id')->references('id')->on('receivers')->onUpdate('cascade')->onDelete('restrict');
             $table->string('address_line_one');
             $table->string('address_line_two')->nullable();
-            $table->unsignedInteger('postcode');
+            $table->string('postcode');
             $table->string('city');
             $table->string('state');
             $table->unsignedInteger('country_id');

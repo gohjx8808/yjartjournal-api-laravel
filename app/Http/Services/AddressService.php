@@ -4,6 +4,9 @@ namespace App\Http\Services;
 
 use App\Http\Repositories\AddressRepository;
 use App\Http\Repositories\UserRepository;
+use App\Http\Requests\AddAddressRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AddressService
 {
@@ -57,5 +60,59 @@ class AddressService
             'default' => $defaultOptions,
             'addressTags' => $addressTags
         ];
+    }
+
+    public static function addAddress(AddAddressRequest $request)
+    {
+        $receiverName = $request->receiverName;
+        $receiverEmail = $request->receiverEmail;
+        $receiverCountryCode = $request->receiverCountryCode;
+        $receiverPhoneNumber = $request->receiverPhoneNumber;
+        $addressLine1 = $request->addressLine1;
+        $addressLine2 = $request->addressLine2;
+        $postcode = $request->postcode;
+        $city = $request->city;
+        $state = $request->state;
+        $countryId = $request->countryId;
+        $default = $request->default;
+        $tagId = $request->tagId;
+
+        $userId = Auth::id();
+
+        DB::beginTransaction();
+
+        $receiver = AddressRepository::addReceiver(
+            $receiverName,
+            $receiverEmail,
+            $receiverCountryCode,
+            $receiverPhoneNumber
+        );
+
+        $receiverId = $receiver->id;
+
+        if ($default) {
+            $existingAddress = AddressRepository::getExistingAddress($userId, $receiverId);
+            $existingAddress->map(function ($address) {
+                $address->_default = false;
+                $address->save();
+            });
+        }
+
+        $address = AddressRepository::addAddress(
+            $userId,
+            $receiverId,
+            $addressLine1,
+            $addressLine2,
+            $postcode,
+            $city,
+            $state,
+            $countryId,
+            $default,
+            $tagId
+        );
+
+        DB::commit();
+
+        return ['address' => $address];
     }
 }

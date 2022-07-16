@@ -30,8 +30,15 @@ class AuthService
 
         $user = AuthRepository::getUserByEmail($email);
 
-        $isPasswordCorrect = Hash::check($password, $user->password);
-        if (!isset($user) || !$isPasswordCorrect) {
+        if (isset($user)) {
+            $isPasswordCorrect = Hash::check($password, $user->password);
+            if (!$isPasswordCorrect) {
+                return [
+                    'success' => false,
+                    'msg' => 'Incorrect username or password'
+                ];
+            }
+        } else {
             return [
                 'success' => false,
                 'msg' => 'Incorrect username or password'
