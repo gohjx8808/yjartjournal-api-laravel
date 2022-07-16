@@ -81,26 +81,14 @@ class AddressService
 
         DB::beginTransaction();
 
-        $receiver = AddressRepository::addReceiver(
-            $receiverName,
-            $receiverEmail,
-            $receiverCountryCode,
-            $receiverPhoneNumber
-        );
-
-        $receiverId = $receiver->id;
-
-        if ($default) {
-            $existingAddress = AddressRepository::getExistingAddress($userId, $receiverId);
-            $existingAddress->map(function ($address) {
-                $address->_default = false;
-                $address->save();
-            });
-        }
+        self::checkDefaultAddress($userId, $default);
 
         $address = AddressRepository::addAddress(
             $userId,
-            $receiverId,
+            $receiverName,
+            $receiverEmail,
+            $receiverCountryCode,
+            $receiverPhoneNumber,
             $addressLine1,
             $addressLine2,
             $postcode,
@@ -114,5 +102,16 @@ class AddressService
         DB::commit();
 
         return ['address' => $address];
+    }
+
+    public static function checkDefaultAddress($userId, $default)
+    {
+        if ($default) {
+            $existingAddress = AddressRepository::getExistingAddress($userId);
+            $existingAddress->map(function ($address) {
+                $address->_default = false;
+                $address->save();
+            });
+        }
     }
 }

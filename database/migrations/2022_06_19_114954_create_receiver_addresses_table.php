@@ -17,8 +17,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('restrict');
-            $table->unsignedInteger('receiver_id');
-            $table->foreign('receiver_id')->references('id')->on('receivers')->onUpdate('cascade')->onDelete('restrict');
+            $table->string('name');
+            $table->string('email');
+            $table->unsignedInteger('country_code_id');
+            $table->foreign('country_code_id')->references('id')->on('countries')->onUpdate('cascade')->onDelete('restrict');
+            $table->string('phone_number');
             $table->string('address_line_one');
             $table->string('address_line_two')->nullable();
             $table->string('postcode');

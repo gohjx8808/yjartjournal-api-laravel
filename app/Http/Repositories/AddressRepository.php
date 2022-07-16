@@ -3,7 +3,6 @@
 namespace App\Http\Repositories;
 
 use App\Models\AddressTag;
-use App\Models\Receiver;
 use App\Models\ReceiverAddress;
 
 class AddressRepository
@@ -13,27 +12,19 @@ class AddressRepository
         return AddressTag::get();
     }
 
-    public static function addReceiver($name, $email, $countryCode, $phoneNum)
-    {
-        return Receiver::updateOrCreate([
-            'name' => $name,
-            'email' => $email,
-            'country_id' => $countryCode,
-            'phone_number' => $phoneNum
-        ]);
-    }
-
-    public static function getExistingAddress($userId, $receiverId)
+    public static function getExistingAddress($userId)
     {
         return ReceiverAddress::query()
             ->where('user_id', $userId)
-            ->where('receiver_id', $receiverId)
             ->get();
     }
 
     public static function addAddress(
         $userId,
-        $receiverId,
+        $receiverName,
+        $receiverEmail,
+        $receiverCountryCode,
+        $receiverPhoneNumber,
         $addressLine1,
         $addressLine2,
         $postcode,
@@ -45,7 +36,10 @@ class AddressRepository
     ) {
         return ReceiverAddress::updateOrCreate([
             'user_id' => $userId,
-            'receiver_id' => $receiverId,
+            'name' => $receiverName,
+            'email' => $receiverEmail,
+            'country_code_id' => $receiverCountryCode,
+            'phone_number' => $receiverPhoneNumber,
             'address_line_one' => $addressLine1,
             'postcode' => $postcode,
             'city' => $city,

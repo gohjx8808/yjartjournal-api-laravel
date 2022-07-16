@@ -10,6 +10,18 @@ class ReceiverAddress extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'address_line_one', 'address_line_two', 'postcode', 'city', 'state', 'country_id', '_default', 'address_tag_id', 'receiver_id'
+        'user_id',
+        'name',
+        'email',
+        'country_code_id',
+        'phone_number',
+        'address_line_one',
+        'address_line_two',
+        'postcode',
+        'city',
+        'state',
+        'country_id',
+        '_default',
+        'address_tag_id',
     ];
 }
