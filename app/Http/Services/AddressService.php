@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Http\Repositories\AddressRepository;
 use App\Http\Repositories\UserRepository;
 use App\Http\Requests\AddAddressRequest;
+use App\Http\Requests\UpdateAddressRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -64,18 +65,7 @@ class AddressService
 
     public static function addAddress(AddAddressRequest $request)
     {
-        $receiverName = $request->receiverName;
-        $receiverEmail = $request->receiverEmail;
-        $receiverCountryCode = $request->receiverCountryCode;
-        $receiverPhoneNumber = $request->receiverPhoneNumber;
-        $addressLine1 = $request->addressLine1;
-        $addressLine2 = $request->addressLine2;
-        $postcode = $request->postcode;
-        $city = $request->city;
-        $state = $request->state;
-        $countryId = $request->countryId;
         $default = $request->default;
-        $tagId = $request->tagId;
 
         $userId = Auth::id();
 
@@ -83,28 +73,14 @@ class AddressService
 
         self::checkDefaultAddress($userId, $default);
 
-        $address = AddressRepository::addAddress(
-            $userId,
-            $receiverName,
-            $receiverEmail,
-            $receiverCountryCode,
-            $receiverPhoneNumber,
-            $addressLine1,
-            $addressLine2,
-            $postcode,
-            $city,
-            $state,
-            $countryId,
-            $default,
-            $tagId
-        );
+        $address = AddressRepository::addAddress($userId, $request);
 
         DB::commit();
 
         return ['address' => $address];
     }
 
-    public static function checkDefaultAddress($userId, $default)
+    public static function checkDefaultAddress(int $userId, bool $default)
     {
         if ($default) {
             $existingAddress = AddressRepository::getExistingAddress($userId);
@@ -113,5 +89,22 @@ class AddressService
                 $address->save();
             });
         }
+    }
+
+    public static function updateAddress(UpdateAddressRequest $request)
+    {
+        $default = $request->default;
+
+        $userId = Auth::id();
+
+        DB::beginTransaction();
+
+        self::checkDefaultAddress($userId, $default);
+
+        AddressRepository::updateAddress($request);
+
+        DB::commit();
+
+        return ['success' => true, 'msg' => 'ok'];
     }
 }
