@@ -14,7 +14,7 @@ class AddressRepository
         return AddressTag::get();
     }
 
-    public static function getExistingAddress(int $userId)
+    public static function getAddressByUserId(int $userId)
     {
         return ReceiverAddress::query()
             ->where('user_id', $userId)

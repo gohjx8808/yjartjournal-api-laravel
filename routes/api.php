@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth:sanctum', 'abilities:role-customer']], func
         Route::post('update', [UserController::class, 'updateAccountDetails'])->name('account.updateDetails');
 
         Route::group(['prefix' => 'address'], function () {
+            Route::get('/', [AddressController::class, 'getAddressList'])->name('address.getAddressList');
             Route::get('modal-options', [AddressController::class, 'getAddressModalOptions'])->name('address.getModalOptions');
             Route::post('add', [AddressController::class, 'addAddress'])->name('address.add');
             Route::post('update', [AddressController::class, 'updateAddress'])->name('address.update');

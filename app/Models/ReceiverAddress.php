@@ -24,4 +24,19 @@ class ReceiverAddress extends Model
         '_default',
         'address_tag_id',
     ];
+
+    public function countryCode()
+    {
+        return $this->belongsTo(Country::class, 'country_code_id');
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    public function addressTag()
+    {
+        return $this->belongsTo(AddressTag::class);
+    }
 }

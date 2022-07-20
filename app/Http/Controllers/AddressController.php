@@ -8,6 +8,13 @@ use App\Http\Services\AddressService;
 
 class AddressController extends Controller
 {
+    public static function getAddressList()
+    {
+        $response = AddressService::getAddressList();
+
+        return response($response);
+    }
+
     public static function getAddressModalOptions()
     {
         $response = AddressService::getAddressModalOptionData();

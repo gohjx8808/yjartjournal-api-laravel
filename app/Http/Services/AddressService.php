@@ -11,6 +11,30 @@ use Illuminate\Support\Facades\DB;
 
 class AddressService
 {
+    public static function getAddressList()
+    {
+        $userId = Auth::id();
+
+        $addresses = AddressRepository::getAddressByUserId($userId);
+
+        return $addresses->map(function ($address) {
+            return [
+                'id' => $address->id,
+                'name' => $address->name,
+                'email' => $address->email,
+                'formattedPhoneNumber' => $address['countryCode']->phone_code . $address->phone_number,
+                'addressLine1' => $address->address_line_one,
+                'addressLine2' => $address->address_line_two,
+                'postcode' => $address->postcode,
+                'city' => $address->city,
+                'state' => $address->state,
+                'country' => $address['country']->name,
+                'default' => $address->_default,
+                'addressTag' => $address['addressTag']?->name
+            ];
+        });
+    }
+
     public static function getAddressModalOptionData()
     {
         $countries = UserRepository::getAllCountries();
@@ -83,7 +107,7 @@ class AddressService
     public static function checkDefaultAddress(int $userId, bool $default)
     {
         if ($default) {
-            $existingAddress = AddressRepository::getExistingAddress($userId);
+            $existingAddress = AddressRepository::getAddressByUserId($userId);
             $existingAddress->map(function ($address) {
                 $address->_default = false;
                 $address->save();
