@@ -62,4 +62,9 @@ class AddressRepository
                 'address_tag_id' => $request->tagId
             ]);
     }
+
+    public static function deleteAddressById($addressId)
+    {
+        ReceiverAddress::find($addressId)->delete();
+    }
 }

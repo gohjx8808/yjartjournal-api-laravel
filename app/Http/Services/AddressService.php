@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Http\Repositories\AddressRepository;
 use App\Http\Repositories\UserRepository;
 use App\Http\Requests\AddAddressRequest;
+use App\Http\Requests\DeleteAddressRequest;
 use App\Http\Requests\UpdateAddressRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -128,6 +129,15 @@ class AddressService
         AddressRepository::updateAddress($request);
 
         DB::commit();
+
+        return ['success' => true, 'msg' => 'ok'];
+    }
+
+    public static function deleteAddress(DeleteAddressRequest $request)
+    {
+        $addressId = $request->addressId;
+
+        AddressRepository::deleteAddressById($addressId);
 
         return ['success' => true, 'msg' => 'ok'];
     }

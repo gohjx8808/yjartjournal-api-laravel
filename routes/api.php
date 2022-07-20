@@ -43,6 +43,7 @@ Route::group(['middleware' => ['auth:sanctum', 'abilities:role-customer']], func
             Route::get('modal-options', [AddressController::class, 'getAddressModalOptions'])->name('address.getModalOptions');
             Route::post('add', [AddressController::class, 'addAddress'])->name('address.add');
             Route::post('update', [AddressController::class, 'updateAddress'])->name('address.update');
+            Route::post('delete', [AddressController::class, 'deleteAddress'])->name('address.delete');
         });
     });
 });
