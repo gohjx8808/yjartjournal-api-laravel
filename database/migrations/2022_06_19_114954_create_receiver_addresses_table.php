@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('receiver_addresses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('restrict');
             $table->string('name');
             $table->string('email');
