@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -44,6 +45,10 @@ Route::group(['middleware' => ['auth:sanctum', 'abilities:role-customer']], func
             Route::post('add', [AddressController::class, 'addAddress'])->name('address.add');
             Route::post('update', [AddressController::class, 'updateAddress'])->name('address.update');
             Route::post('delete', [AddressController::class, 'deleteAddress'])->name('address.delete');
+        });
+
+        Route::group(['prefix' => 'order'], function () {
+            Route::get('history', [OrderController::class, 'getOrderHistory'])->name('order.getHistory');
         });
     });
 });

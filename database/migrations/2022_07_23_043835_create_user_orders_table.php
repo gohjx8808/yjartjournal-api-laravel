@@ -20,8 +20,8 @@ return new class extends Migration
             $table->foreign('receiver_address_id')->references('id')->on('receiver_addresses')->onDelete('restrict');
             $table->unsignedInteger('shipping_fee')->nullable();
             $table->string('notes')->nullable();
-            $table->unsignedInteger('promo_code_usage_id');
-            $table->foreign('promo_code_usage_id')->references('id')->on('promo_code_usages')->onUpdate('cascade')->onDelete('restrict');
+            $table->unsignedInteger('promo_code_id');
+            $table->foreign('promo_code_id')->references('id')->on('promo_codes')->onUpdate('cascade')->onDelete('restrict');
             $table->unsignedInteger('payment_option_id');
             $table->foreign('payment_option_id')->references('id')->on('payment_options')->onUpdate('cascade')->onDelete('restrict');
             $table->unsignedInteger('order_status_id');
