@@ -27,9 +27,10 @@ Route::get('account-options', [UserController::class, 'getAccountOptions'])->nam
 
 Route::group(['prefix' => 'products'], function () {
     Route::post('/', [ProductController::class, 'getAllProducts'])->name('products.getAll');
-    Route::post('/details', [ProductController::class, 'getProductDetails'])->name('products.getProductDetails');
-    Route::get('/sort-by-options', [ProductController::class, 'getSortByOptions'])->name('products.getSortByOptions');
-    Route::get('/imageGallery', [ProductController::class, 'getImageGallery'])->name('products.getImageGallery');
+    Route::post('details', [ProductController::class, 'getProductDetails'])->name('products.getProductDetails');
+    Route::get('sort-by-options', [ProductController::class, 'getSortByOptions'])->name('products.getSortByOptions');
+    Route::get('imageGallery', [ProductController::class, 'getImageGallery'])->name('products.getImageGallery');
+    Route::post('checkout', [OrderController::class, 'checkout'])->name('order.postCheckout');
 });
 
 Route::group(['middleware' => ['auth:sanctum', 'abilities:role-customer']], function () {
