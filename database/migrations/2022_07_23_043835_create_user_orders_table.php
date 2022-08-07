@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('user_orders', function (Blueprint $table) {
             $table->id();
+            $table->string('email');
             $table->unsignedInteger('receiver_address_id');
             $table->foreign('receiver_address_id')->references('id')->on('receiver_addresses')->onDelete('restrict');
             $table->unsignedInteger('shipping_fee')->nullable();

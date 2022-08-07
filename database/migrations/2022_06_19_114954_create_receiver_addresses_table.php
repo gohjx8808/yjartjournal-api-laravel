@@ -18,7 +18,6 @@ return new class extends Migration
             $table->unsignedInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('restrict');
             $table->string('name');
-            $table->string('email');
             $table->unsignedInteger('country_code_id');
             $table->foreign('country_code_id')->references('id')->on('countries')->onUpdate('cascade')->onDelete('restrict');
             $table->string('phone_number');

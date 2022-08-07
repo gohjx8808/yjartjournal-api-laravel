@@ -23,7 +23,6 @@ class AddAddressRequest extends CustomRequest
     {
         return [
             'receiverName' => 'required|string',
-            'receiverEmail' => 'required|string',
             'receiverCountryCode' => 'required|integer',
             'receiverPhoneNumber' => 'required|integer',
             'addressLine1' => 'required|string',

@@ -28,7 +28,6 @@ class AddressRepository
         return ReceiverAddress::updateOrCreate([
             'user_id' => $userId,
             'name' => $request->receiverName,
-            'email' => $request->receiverEmail,
             'country_code_id' => $request->receiverCountryCode,
             'phone_number' => $request->receiverPhoneNumber,
             'address_line_one' => $request->addressLine1,
@@ -49,7 +48,6 @@ class AddressRepository
             ->find($request->addressId)
             ->update([
                 'name' => $request->receiverName,
-                'email' => $request->receiverEmail,
                 'country_code_id' => $request->receiverCountryCode,
                 'phone_number' => $request->receiverPhoneNumber,
                 'address_line_one' => $request->addressLine1,

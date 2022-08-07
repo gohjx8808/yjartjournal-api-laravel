@@ -22,7 +22,6 @@ class AddressService
             return [
                 'id' => $address->id,
                 'name' => $address->name,
-                'email' => $address->email,
                 'formattedPhoneNumber' => $address['countryCode']->phone_code . $address->phone_number,
                 'addressLine1' => $address->address_line_one,
                 'addressLine2' => $address->address_line_two,

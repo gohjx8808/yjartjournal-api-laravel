@@ -24,7 +24,6 @@ class UpdateAddressRequest extends CustomRequest
         return [
             'addressId' => 'required|integer',
             'receiverName' => 'required|string',
-            'receiverEmail' => 'required|string',
             'receiverCountryCode' => 'required|integer',
             'receiverPhoneNumber' => 'required|integer',
             'addressLine1' => 'required|string',

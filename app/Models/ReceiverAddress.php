@@ -12,7 +12,6 @@ class ReceiverAddress extends Model
     protected $fillable = [
         'user_id',
         'name',
-        'email',
         'country_code_id',
         'phone_number',
         'address_line_one',
