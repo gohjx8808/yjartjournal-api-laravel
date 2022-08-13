@@ -2,6 +2,8 @@
 
 namespace App\Http\Repositories;
 
+use App\Http\Requests\CheckoutRequest;
+use App\Models\OrderStatus;
 use App\Models\UserOrder;
 
 class OrderRepository
@@ -12,5 +14,19 @@ class OrderRepository
             ->with('hasManyOrderDetails', 'receiverAddress', 'promoCode', 'paymentOption', 'orderStatus')
             ->where('email', $userEmail)
             ->get();
+    }
+
+    public static function addUserOrder(string $email, int $shippingFee, float $totalPrice, CheckoutRequest $request)
+    {
+        return UserOrder::create([
+            'email' => $email,
+            'receiver_address_id' => $request->addressId,
+            'shipping_fee' => $shippingFee,
+            'notes' => $request->notes,
+            'promo_code_id' => $request->promoCode,
+            'payment_option_id' => $request->paymentOptionId,
+            'order_status_id' => OrderStatus::TO_PAY,
+            'total_price' => $totalPrice,
+        ]);
     }
 }

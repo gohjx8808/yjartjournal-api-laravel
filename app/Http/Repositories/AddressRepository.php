@@ -65,4 +65,9 @@ class AddressRepository
     {
         ReceiverAddress::find($addressId)->delete();
     }
+
+    public static function getAddressById(int $id)
+    {
+        return ReceiverAddress::find($id);
+    }
 }

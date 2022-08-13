@@ -18,17 +18,17 @@ return new class extends Migration
             $table->string('email');
             $table->unsignedInteger('receiver_address_id');
             $table->foreign('receiver_address_id')->references('id')->on('receiver_addresses')->onDelete('restrict');
-            $table->unsignedInteger('shipping_fee')->nullable();
+            $table->unsignedFloat('shipping_fee')->nullable();
             $table->string('notes')->nullable();
-            $table->unsignedInteger('promo_code_id');
+            $table->unsignedInteger('promo_code_id')->nullable();
             $table->foreign('promo_code_id')->references('id')->on('promo_codes')->onUpdate('cascade')->onDelete('restrict');
             $table->unsignedInteger('payment_option_id');
             $table->foreign('payment_option_id')->references('id')->on('payment_options')->onUpdate('cascade')->onDelete('restrict');
             $table->unsignedInteger('order_status_id');
             $table->foreign('order_status_id')->references('id')->on('order_statuses')->onUpdate('cascade')->onDelete('restrict');
-            $table->unsignedInteger('total_price');
-            $table->dateTime('completed_at');
-            $table->dateTime('cancelled_at');
+            $table->unsignedFloat('total_price');
+            $table->dateTime('completed_at')->nullable();
+            $table->dateTime('cancelled_at')->nullable();
             $table->timestamps();
         });
     }
