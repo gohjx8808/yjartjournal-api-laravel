@@ -10,4 +10,9 @@ class PromoCode extends Model
     use HasFactory;
 
     protected $fillable = ['code', 'amount', 'promo_type_id', 'usage_limit', 'start_at', 'expired_at'];
+
+    public function promoType()
+    {
+        return $this->belongsTo(PromoType::class);
+    }
 }

@@ -10,4 +10,7 @@ class PromoType extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+
+    const NUMBER_TEXT = 'number';
+    const PERCENTAGE_TEXT = 'percentage';
 }

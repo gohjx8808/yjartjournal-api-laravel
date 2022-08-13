@@ -6,6 +6,7 @@ use App\Http\Repositories\AddressRepository;
 use App\Http\Repositories\OrderRepository;
 use App\Http\Repositories\PromoCodeRepository;
 use App\Http\Requests\CheckoutRequest;
+use App\Models\PromoType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -50,19 +51,28 @@ class OrderService
             $addressId = $address->id;
         }
 
+        $shippingFee = self::calculateShippingFee($state, $productsTotalPrice);
+
         if (isset($promoCode)) {
             $codeDetails = PromoCodeRepository::getPromoCodeByCode($promoCode);
 
             if (!isset($codeDetails)) {
                 return ['success' => false, 'msg' => 'Invalid promo code!'];
             }
-            
+
             if (Carbon::now()->lt($codeDetails->start_at) || Carbon::now()->gt($codeDetails->expired_at)) {
                 return ['success' => false, 'msg' => 'Promo code expired!'];
             }
-        }
 
-        $shippingFee = self::calculateShippingFee($state, $productsTotalPrice);
+            $promoType = $codeDetails['promoType']->name;
+
+            if ($promoType === PromoType::NUMBER_TEXT) {
+                $productsTotalPrice -= $codeDetails->amount;
+            } else if ($promoType === PromoType::PERCENTAGE_TEXT) {
+                $remainingPercentage = 1 - ($codeDetails->amount / 100);
+                $productsTotalPrice = $productsTotalPrice * $remainingPercentage;
+            }
+        }
 
         $userOrder = OrderRepository::addUserOrder($email, $shippingFee, $productsTotalPrice, $addressId, $request);
 

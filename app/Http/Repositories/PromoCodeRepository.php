@@ -8,6 +8,9 @@ class PromoCodeRepository
 {
     public static function getPromoCodeByCode($code)
     {
-        return PromoCode::where('code', $code)->first();
+        return PromoCode::query()
+            ->with('promoType')
+            ->where('code', $code)
+            ->first();
     }
 }

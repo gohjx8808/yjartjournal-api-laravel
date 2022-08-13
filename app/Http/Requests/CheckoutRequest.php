@@ -50,7 +50,7 @@ class CheckoutRequest extends CustomRequest
             'products.*.id' => 'required|string',
             'products.*.quantity' => 'required|integer',
             'products.*.totalPrice' => 'required|numeric',
-            'addressId' => $isLoggedIn ? 'integer|nullable' : 'prohibited',
+            'addressId' => $isLoggedIn ? 'integer|nullable' : 'prohibited|nullable',
             'email' => $addressEmailRules,
             'receiverName' => $addressStringRules,
             'receiverCountryCode' => $addressNumberRules,
@@ -61,7 +61,7 @@ class CheckoutRequest extends CustomRequest
             'city' => $addressStringRules,
             'state' => $addressStringRules,
             'countryId' => $addressNumberRules,
-            'promoCode' => $isLoggedIn ? 'string|nullable' : 'prohibited',
+            'promoCode' => $isLoggedIn ? 'string|nullable' : 'prohibited|nullable',
             'notes' => 'string|nullable',
             'addAddress' => 'boolean|required',
             'paymentOptionId' => 'integer|required'
