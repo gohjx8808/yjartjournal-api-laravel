@@ -9,22 +9,31 @@ use App\Models\UserOrder;
 
 class OrderRepository
 {
-    public static function getOrderByEmail(string $userEmail)
+    public static function getOrderByEmail(string $userEmail, int $promoCodeId = null)
     {
         return UserOrder::query()
             ->with('hasManyOrderDetails', 'receiverAddress', 'promoCode', 'paymentOption', 'orderStatus')
             ->where('email', $userEmail)
+            ->when($promoCodeId !== null, function ($query) use ($promoCodeId) {
+                return $query->where('promo_code_id', $promoCodeId);
+            })
             ->get();
     }
 
-    public static function addUserOrder(string $email, int $shippingFee, float $totalPrice, int $addressId, CheckoutRequest $request)
-    {
+    public static function addUserOrder(
+        string $email,
+        int $shippingFee,
+        float $totalPrice,
+        int $addressId,
+        int $promoCodeId,
+        CheckoutRequest $request
+    ) {
         return UserOrder::create([
             'email' => $email,
             'receiver_address_id' => $addressId,
             'shipping_fee' => $shippingFee,
             'notes' => $request->notes,
-            'promo_code_id' => $request->promoCode,
+            'promo_code_id' => $promoCodeId,
             'payment_option_id' => $request->paymentOptionId,
             'order_status_id' => OrderStatus::TO_PAY,
             'total_price' => $totalPrice,

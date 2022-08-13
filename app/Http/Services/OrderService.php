@@ -29,7 +29,10 @@ class OrderService
         $addAddress = $request->addAddress;
 
         $authenticatedUser = Auth('sanctum')->user();
-        $email = $authenticatedUser->email;
+
+        if (isset($authenticatedUser)) {
+            $email = $authenticatedUser->email;
+        }
 
         $productsTotalPrice = $products->sum('totalPrice');
 
@@ -64,6 +67,19 @@ class OrderService
                 return ['success' => false, 'msg' => 'Promo code expired!'];
             }
 
+            $usageLimit = $codeDetails->usage_limit;
+            $codeId = $codeDetails->id;
+
+            $userOrders = OrderRepository::getOrderByEmail($email, $codeId);
+
+            $promoCodeUsedCount = $userOrders->reduce(function ($carry) {
+                return $carry += 1;
+            }, 1); // start from 1 to include current promo code usage
+
+            if ($promoCodeUsedCount > $usageLimit) {
+                return ['success' => false, 'msg' => 'Promo code usage limit exceeded!'];
+            }
+
             $promoType = $codeDetails['promoType']->name;
 
             if ($promoType === PromoType::NUMBER_TEXT) {
@@ -74,7 +90,14 @@ class OrderService
             }
         }
 
-        $userOrder = OrderRepository::addUserOrder($email, $shippingFee, $productsTotalPrice, $addressId, $request);
+        $userOrder = OrderRepository::addUserOrder(
+            $email,
+            $shippingFee,
+            $productsTotalPrice,
+            $addressId,
+            $codeId,
+            $request
+        );
 
         $userOrderId = $userOrder->id;
 

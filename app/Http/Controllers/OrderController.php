@@ -19,6 +19,10 @@ class OrderController extends Controller
     {
         $response = OrderService::checkout($request);
 
-        return response($response);
+        if ($response['success']) {
+            return response($response);
+        }
+
+        return response($response, 422);
     }
 }
