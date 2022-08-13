@@ -97,7 +97,7 @@ class AddressService
 
         self::checkDefaultAddress($userId, $default);
 
-        $address = AddressRepository::addAddress($userId, $request);
+        $address = AddressRepository::addAddress($request, $userId);
 
         DB::commit();
 

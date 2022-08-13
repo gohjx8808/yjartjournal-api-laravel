@@ -3,6 +3,7 @@
 namespace App\Http\Repositories;
 
 use App\Http\Requests\AddAddressRequest;
+use App\Http\Requests\CheckoutRequest;
 use App\Http\Requests\UpdateAddressRequest;
 use App\Models\AddressTag;
 use App\Models\ReceiverAddress;
@@ -22,8 +23,8 @@ class AddressRepository
     }
 
     public static function addAddress(
-        int $userId,
-        AddAddressRequest $request
+        AddAddressRequest|CheckoutRequest $request,
+        int $userId = null,
     ) {
         return ReceiverAddress::updateOrCreate([
             'user_id' => $userId,
@@ -37,7 +38,7 @@ class AddressRepository
             'country_id' => $request->countryId
         ], [
             'address_line_two' => $request->addressLine2,
-            '_default' => $request->default,
+            '_default' => $request->default || 0,
             'address_tag_id' => $request->tagId
         ]);
     }

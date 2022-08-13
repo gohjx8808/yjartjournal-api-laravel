@@ -17,11 +17,11 @@ class OrderRepository
             ->get();
     }
 
-    public static function addUserOrder(string $email, int $shippingFee, float $totalPrice, CheckoutRequest $request)
+    public static function addUserOrder(string $email, int $shippingFee, float $totalPrice, int $addressId, CheckoutRequest $request)
     {
         return UserOrder::create([
             'email' => $email,
-            'receiver_address_id' => $request->addressId,
+            'receiver_address_id' => $addressId,
             'shipping_fee' => $shippingFee,
             'notes' => $request->notes,
             'promo_code_id' => $request->promoCode,

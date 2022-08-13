@@ -25,6 +25,9 @@ class OrderService
         $promoCode = $request->promoCode;
         $addAddress = $request->addAddress;
 
+        $authenticatedUser = Auth('sanctum')->user();
+        $email = $authenticatedUser->email;
+
         $productsTotalPrice = $products->sum('totalPrice');
 
         if (isset($$addressId)) {
@@ -32,8 +35,36 @@ class OrderService
             $state = $addressDetails->state;
         } else {
             $state = $request->state;
+
+            $address = AddressRepository::addAddress($request);
+
+            if ($addAddress && isset($authenticatedUser)) {
+                $address->user_id = $authenticatedUser->id;
+                $address->save();
+            }
+
+            $addressId = $address->id;
         }
 
+        $shippingFee = self::calculateShippingFee($state, $productsTotalPrice);
+
+        DB::beginTransaction();
+
+        $userOrder = OrderRepository::addUserOrder($email, $shippingFee, $productsTotalPrice, $addressId, $request);
+
+        $userOrderId = $userOrder->id;
+
+        $products->map(function ($product) use ($userOrderId) {
+            OrderRepository::addOrderDetails($userOrderId, $product);
+        });
+
+        DB::commit();
+
+        return ['msg' => 'Checkout success!'];
+    }
+
+    public static function calculateShippingFee(string $state, float $productsTotalPrice)
+    {
         $westMalaysia = ['Sarawak', 'Labuan', 'Sabah'];
 
         if (in_array($state, $westMalaysia)) {
@@ -50,21 +81,6 @@ class OrderService
             }
         }
 
-        $authenticatedUser = Auth('sanctum')->user();
-        $email = $authenticatedUser->email;
-
-        DB::beginTransaction();
-
-        $userOrder = OrderRepository::addUserOrder($email, $shippingFee, $productsTotalPrice, $request);
-
-        $userOrderId = $userOrder->id;
-
-        $products->map(function ($product) use ($userOrderId) {
-            OrderRepository::addOrderDetails($userOrderId, $product);
-        });
-
-        DB::commit();
-
-        return ['msg' => 'Checkout success!'];
+        return $shippingFee;
     }
 }
