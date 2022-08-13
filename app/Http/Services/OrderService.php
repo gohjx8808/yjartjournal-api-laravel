@@ -57,8 +57,14 @@ class OrderService
 
         $userOrder = OrderRepository::addUserOrder($email, $shippingFee, $productsTotalPrice, $request);
 
-        dd($userOrder);
+        $userOrderId = $userOrder->id;
 
-        return;
+        $products->map(function ($product) use ($userOrderId) {
+            OrderRepository::addOrderDetails($userOrderId, $product);
+        });
+
+        DB::commit();
+
+        return ['msg' => 'Checkout success!'];
     }
 }

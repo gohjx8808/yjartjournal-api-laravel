@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('user_order_id')->references('id')->on('user_orders')->onDelete('restrict');
             $table->unsignedInteger('quantity');
             $table->string('product_id');
-            $table->unsignedInteger('total_price');
+            $table->unsignedFloat('total_price');
             $table->timestamps();
         });
     }

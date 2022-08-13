@@ -3,6 +3,7 @@
 namespace App\Http\Repositories;
 
 use App\Http\Requests\CheckoutRequest;
+use App\Models\OrderDetail;
 use App\Models\OrderStatus;
 use App\Models\UserOrder;
 
@@ -27,6 +28,16 @@ class OrderRepository
             'payment_option_id' => $request->paymentOptionId,
             'order_status_id' => OrderStatus::TO_PAY,
             'total_price' => $totalPrice,
+        ]);
+    }
+
+    public static function addOrderDetails($userOrderId, $product)
+    {
+        OrderDetail::create([
+            'user_order_id' => $userOrderId,
+            'quantity' => $product['quantity'],
+            'product_id' => $product['id'],
+            'total_price' => $product['totalPrice'],
         ]);
     }
 }
