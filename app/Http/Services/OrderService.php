@@ -4,7 +4,9 @@ namespace App\Http\Services;
 
 use App\Http\Repositories\AddressRepository;
 use App\Http\Repositories\OrderRepository;
+use App\Http\Repositories\PromoCodeRepository;
 use App\Http\Requests\CheckoutRequest;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -30,6 +32,8 @@ class OrderService
 
         $productsTotalPrice = $products->sum('totalPrice');
 
+        DB::beginTransaction();
+
         if (isset($$addressId)) {
             $addressDetails = AddressRepository::getAddressById($addressId);
             $state = $addressDetails->state;
@@ -46,9 +50,19 @@ class OrderService
             $addressId = $address->id;
         }
 
-        $shippingFee = self::calculateShippingFee($state, $productsTotalPrice);
+        if (isset($promoCode)) {
+            $codeDetails = PromoCodeRepository::getPromoCodeByCode($promoCode);
 
-        DB::beginTransaction();
+            if (!isset($codeDetails)) {
+                return ['success' => false, 'msg' => 'Invalid promo code!'];
+            }
+            
+            if (Carbon::now()->lt($codeDetails->start_at) || Carbon::now()->gt($codeDetails->expired_at)) {
+                return ['success' => false, 'msg' => 'Promo code expired!'];
+            }
+        }
+
+        $shippingFee = self::calculateShippingFee($state, $productsTotalPrice);
 
         $userOrder = OrderRepository::addUserOrder($email, $shippingFee, $productsTotalPrice, $addressId, $request);
 
@@ -60,7 +74,7 @@ class OrderService
 
         DB::commit();
 
-        return ['msg' => 'Checkout success!'];
+        return ['success' => true, 'msg' => 'Checkout success!'];
     }
 
     public static function calculateShippingFee(string $state, float $productsTotalPrice)
