@@ -33,7 +33,7 @@ Route::group(['prefix' => 'products'], function () {
     Route::post('checkout', [OrderController::class, 'checkout'])->name('order.postCheckout');
 });
 
-Route::post('test', [ProductController::class, 'testEmail']);
+Route::get('test', [ProductController::class, 'testEmail']);
 
 Route::group(['middleware' => ['auth:sanctum', 'abilities:role-customer']], function () {
     Route::post('sign-out', [AuthController::class, 'signOut'])->name('auth.signOut');

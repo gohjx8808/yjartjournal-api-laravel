@@ -42,6 +42,8 @@ class ProductController extends Controller
     {
         $data = ['message' => 'This is a test!'];
 
-        Mail::to('jingxuan.goh@capbay.com')->send(new PaymentEmail($data));
+        return view('emails.payment',[ 'test_message' => $data['message'] ]);
+
+        // Mail::to('jingxuan.goh@capbay.com')->send(new PaymentEmail($data));
     }
 }
