@@ -40,9 +40,7 @@ class ProductController extends Controller
 
     public static function testEmail()
     {
-        $data = ['message' => 'This is a test!'];
-
-        return view('emails.payment',[ 'test_message' => $data['message'] ]);
+        return view('emails.payment',[ 'paymentOption' => 'TNG','name' => 'tester','amount'=>number_format(70,2) ]);
 
         // Mail::to('jingxuan.goh@capbay.com')->send(new PaymentEmail($data));
     }
