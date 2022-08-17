@@ -11,16 +11,62 @@ class PaymentEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $data;
+    protected $name;
+    protected $paymentOption;
+    protected $products;
+    protected $totalAmount;
+    protected $totalDiscount;
+    protected $shippingFee;
+    protected $totalAfterDiscount;
+    protected $note;
+    protected $receiverName;
+    protected $phoneNo;
+    protected $addressLine1;
+    protected $addressLine2;
+    protected $postcode;
+    protected $city;
+    protected $state;
+    protected $country;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data)
-    {
-        $this->data = $data;
+    public function __construct(
+        string $name,
+        string $paymentOption,
+        $products,
+        float $totalAmount,
+        float|null $totalDiscount,
+        float $shippingFee,
+        float $totalAfterDiscount,
+        string|null $note,
+        string $receiverName,
+        string $phoneNo,
+        string $addressLine1,
+        string|null $addressLine2,
+        string $postcode,
+        string $city,
+        string $state,
+        string $country,
+    ) {
+        $this->name = $name;
+        $this->paymentOption = $paymentOption;
+        $this->products = $products;
+        $this->totalAmount = $totalAmount;
+        $this->totalDiscount = $totalDiscount;
+        $this->shippingFee = $shippingFee;
+        $this->totalAfterDiscount = $totalAfterDiscount;
+        $this->note = $note;
+        $this->receiverName = $receiverName;
+        $this->phoneNo = $phoneNo;
+        $this->addressLine1 = $addressLine1;
+        $this->addressLine2 = $addressLine2;
+        $this->postcode = $postcode;
+        $this->city = $city;
+        $this->state = $state;
+        $this->country = $country;
     }
 
     /**
@@ -33,27 +79,22 @@ class PaymentEmail extends Mailable
         $subject = 'Complete Your YJ Art Journal Order';
 
         return $this->view('emails.payment')->subject($subject)->with([
-            'paymentOption' => 'Bank Transfer',
-            'name' => 'tester',
-            'amount' => number_format(70, 2),
-            'products' => [[
-                "id" => "5ijVADxXLTqLqYwVpJelh5",
-                "quantity" => 1,
-                "totalPrice" => 25.2
-            ]],
-            "totalAmount" => 25.2,
-            "totalDiscount" => 5,
-            "shippingFee" => 8,
-            "totalAfterDiscount" => 28.2,
-            "note" => 'testing',
-            'receiverName' => 'test receiver',
-            'phoneNo' => '1234567',
-            'addressLine1' => '1, Lorong Test 2',
-            'addressLine2' => 'Taman Test',
-            'postcode' => 12300,
-            'city' => 'test city',
-            'state' => 'Selangor',
-            'country' => 'Malaysia'
+            'paymentOption' => $this->paymentOption,
+            'name' => $this->name,
+            'products' => $this->products,
+            "totalAmount" => number_format($this->totalAmount, 2),
+            "totalDiscount" => number_format($this->totalDiscount, 2),
+            "shippingFee" => number_format($this->shippingFee, 2),
+            "totalAfterDiscount" => number_format($this->totalAfterDiscount, 2),
+            "note" => $this->note,
+            'receiverName' => $this->receiverName,
+            'phoneNo' => $this->phoneNo,
+            'addressLine1' => $this->addressLine1,
+            'addressLine2' => $this->addressLine2,
+            'postcode' => $this->postcode,
+            'city' => $this->city,
+            'state' => $this->state,
+            'country' => $this->country,
         ]);
     }
 }

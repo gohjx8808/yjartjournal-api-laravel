@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -13,7 +14,7 @@
     <h2>Pay via {{$paymentOption}}</h2>
     <p>Hi {{ $name }},</p>
     <p>
-      Please kindly proceed to your payment of <strong>RM {{$amount}}</strong> via
+      Please kindly proceed to your payment of <strong>RM {{$totalAfterDiscount}}</strong> via
       {{$paymentOption}} to:
     </p>
     <hr class="thin-divider">
@@ -37,7 +38,7 @@
       </tr>
       @foreach ($products as $product)
       <tr class="product">
-        <td>{{$product['id']}}</td>
+        <td>{{$product['name']}}</td>
         <td class="center">{{$product['quantity']}}</td>
         <td class="currency-align">{{$product['totalPrice']}}</td>
       </tr>
@@ -84,10 +85,32 @@
       </tr>
       <tr>
         <td>Address:</td>
-        <td>{{$addressLine1}} {{$addressLine2}} {{$postcode}} {{$city}} {{$state}} {{$country}}</td>
+        <td>{{$addressLine1}}</td>
+      </tr>
+      @if($addressLine2)
+      <tr>
+        <td></td>
+        <td>{{$addressLine2}}</td>
+      </tr>
+      @endif
+      <tr>
+        <td></td>
+        <td>{{$postcode}} {{$city}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>{{$state}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>{{$country}}</td>
       </tr>
     </table>
     <hr class="thick-divider">
+    <div style="margin-left:auto">
+      <a href="https://www.facebook.com/YJartjournal" target="_blank" class="fa fa-facebook"></a>
+      <a href="https://www.instagram.com/yjartjournal/" target="_blank" class="fa fa-instagram"></a>
+    </div>
   </div>
 </body>
 
@@ -146,6 +169,21 @@
   .center-thin-h2 {
     font-weight: normal;
     text-align: center
+  }
+
+  .fa {
+    padding: 8px;
+    font-size: 15px;
+    border-radius: 5px;
+    width: 18px;
+    text-align: center;
+    text-decoration: none;
+    background: #B67B5E;
+    color: white;
+  }
+
+  .fa:hover {
+    opacity: 0.7;
   }
 </style>
 

@@ -25,7 +25,7 @@ class OrderRepository
         int $shippingFee,
         float $totalPrice,
         int $addressId,
-        int $promoCodeId,
+        int|null $promoCodeId,
         CheckoutRequest $request
     ) {
         return UserOrder::create([

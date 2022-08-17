@@ -2,14 +2,17 @@
 
 namespace App\Http\Services;
 
+use App\Contentful\ContentfulAPI;
 use App\Http\Repositories\AddressRepository;
 use App\Http\Repositories\OrderRepository;
 use App\Http\Repositories\PromoCodeRepository;
 use App\Http\Requests\CheckoutRequest;
+use App\Mail\PaymentEmail;
 use App\Models\PromoType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class OrderService
 {
@@ -83,10 +86,11 @@ class OrderService
             $promoType = $codeDetails['promoType']->name;
 
             if ($promoType === PromoType::NUMBER_TEXT) {
-                $productsTotalPrice -= $codeDetails->amount;
+                $discountAmount = $codeDetails->amount;
+                $productsTotalPrice -= $discountAmount;
             } else if ($promoType === PromoType::PERCENTAGE_TEXT) {
-                $remainingPercentage = 1 - ($codeDetails->amount / 100);
-                $productsTotalPrice = $productsTotalPrice * $remainingPercentage;
+                $discountAmount = $productsTotalPrice * ($codeDetails->amount / 100);
+                $productsTotalPrice = $productsTotalPrice - $discountAmount;
             }
         }
 
@@ -95,17 +99,43 @@ class OrderService
             $shippingFee,
             $productsTotalPrice,
             $addressId,
-            $codeId,
+            $codeId ?? null,
             $request
         );
 
         $userOrderId = $userOrder->id;
 
-        $products->map(function ($product) use ($userOrderId) {
+        $contentful = new ContentfulAPI();
+
+        $formattedProducts = $products->reduce(function ($carry, $product) use ($userOrderId, $contentful) {
             OrderRepository::addOrderDetails($userOrderId, $product);
-        });
+            $productDetails = $contentful->getSingleProduct($product['id']);
+
+            return $carry->push([...$product, 'name' => $productDetails->name]);
+        }, collect());
 
         DB::commit();
+
+        $receiverAddress = $userOrder['receiverAddress'];
+
+        Mail::to('jingxuan.goh@capbay.com')->send(new PaymentEmail(
+            $authenticatedUser->name ?? $userOrder->email,
+            $userOrder['paymentOption']->name,
+            $formattedProducts,
+            $userOrder->total_price + ($discountAmount ?? 0),
+            $discountAmount ?? null,
+            $shippingFee,
+            $userOrder->total_price + $shippingFee,
+            $userOrder->notes,
+            $receiverAddress->name,
+            $receiverAddress['countryCode']->phone_code . ' ' . $receiverAddress->phone_number,
+            $receiverAddress->address_line_one,
+            $receiverAddress->address_line_two,
+            $receiverAddress->postcode,
+            $receiverAddress->city,
+            $receiverAddress->state,
+            $receiverAddress['country']->name
+        ));
 
         return ['success' => true, 'msg' => 'Checkout success!'];
     }
