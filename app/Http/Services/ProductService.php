@@ -7,7 +7,6 @@ use App\Http\Repositories\ProductRepository;
 use App\Http\Requests\GetAllProductsRequest;
 use App\Http\Requests\GetProductDetailsRequest;
 use App\Models\SortByOption;
-use Contentful\RichText\Renderer;
 
 class ProductService
 {
@@ -69,8 +68,6 @@ class ProductService
         $contentful = new ContentfulAPI();
         $details = $contentful->getSingleProduct($productId);
 
-        $renderer = new Renderer();
-
         $productImages = $details->productImage;
 
         $productDetails = [
@@ -78,7 +75,7 @@ class ProductService
             'name' => $details->name,
             'images' => self::getProductImagesLinks($productImages),
             'price' => $details->price,
-            'description' => $renderer->render($details->contentDescription),
+            'description' => $details->contentDescription,
             'category' => $details->category,
             'discountedPrice' => $details->discountedPrice
         ];
