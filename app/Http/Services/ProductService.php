@@ -22,6 +22,10 @@ class ProductService
 
         $categories = $products->groupBy('category')->keys();
 
+        $categories->transform(function ($item) {
+            return ucwords($item);
+        });
+
         if (!empty($nameSearch)) {
             $products = $products->filter(function ($product) use ($nameSearch) {
                 $occurance = stripos($product->name, $nameSearch);
@@ -46,18 +50,13 @@ class ProductService
             return $productData;
         });
 
-        $categories = $categories->map(function ($category) use ($productList) {
-            $formattedCategory = ucwords($category);
-            $availableKeys = $productList->groupBy('category')->keys();
-            if ($availableKeys->contains($formattedCategory)) {
-                return [$formattedCategory => true];
-            }
-            return [$formattedCategory => false];
-        });
+        $groupedProductList = $productList->groupBy('category');
+        $availableCategories = $groupedProductList->keys();
 
         $data = [
-            'products' => $productList,
-            'categories' => $categories,
+            'products' => $groupedProductList,
+            'allCategories' => $categories,
+            'availableCategories' => $availableCategories
         ];
 
         return $data;
