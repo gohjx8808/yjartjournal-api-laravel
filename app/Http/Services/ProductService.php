@@ -133,7 +133,7 @@ class ProductService
                 array_push($imageGallery, [
                     'row' => $image->row,
                     'col' => $image->column,
-                    'images' => $parsedImg,
+                    'image' => $parsedImg,
                 ]);
             });
 
