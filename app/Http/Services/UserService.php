@@ -39,9 +39,14 @@ class UserService
         $countries = UserRepository::getAllCountries();
 
         $countryCodes = $countries->map(function ($country) {
-            return ['id' => $country->id, 'iso2' => $country->iso2, 'phoneCode' => $country->phone_code];
+            return [
+                'id' => $country->id,
+                'iso2' => $country->iso2,
+                'countryCode' => $country->phone_code,
+                'name' => $country->name
+            ];
         });
-        
+
         $genders = [
             ['value' => 'M', 'label' => 'Male'],
             ['value' => 'F', 'label' => 'Female']
