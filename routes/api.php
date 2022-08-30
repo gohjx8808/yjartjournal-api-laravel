@@ -37,7 +37,11 @@ Route::group(['middleware' => ['auth:sanctum', 'abilities:role-customer']], func
     Route::post('sign-out', [AuthController::class, 'signOut'])->name('auth.signOut');
 
     Route::group(['prefix' => 'account'], function () {
-        Route::get('details', [UserController::class, 'getAccountDetails'])->name('account.getDetails');
+        Route::group(['prefix' => 'details'], function () {
+            Route::get('/', [UserController::class, 'getAccountDetails'])->name('account.getDetails');
+            Route::get('edit', [UserController::class, 'getEditDetails'])->name('account.getEditDetails');
+        });
+
         Route::post('update', [UserController::class, 'updateAccountDetails'])->name('account.updateDetails');
 
         Route::group(['prefix' => 'address'], function () {

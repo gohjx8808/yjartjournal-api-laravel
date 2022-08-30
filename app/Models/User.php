@@ -36,6 +36,9 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    const MALE = 'M';
+    const FEMALE = 'F';
+
     public function country()
     {
         return $this->belongsTo(Country::class);

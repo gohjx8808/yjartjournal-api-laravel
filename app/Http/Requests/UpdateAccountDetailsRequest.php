@@ -22,10 +22,10 @@ class UpdateAccountDetailsRequest extends CustomRequest
     public function rules()
     {
         return [
-            'fullName' => 'required|string',
+            'name' => 'required|string',
             'gender' => 'required|string',
-            'countryCode' => 'required|integer',
-            'phoneNumber' => 'required|integer',
+            'countryCodeId' => 'required|integer',
+            'phoneNo' => 'required|integer',
             'dob' => 'required|date'
         ];
     }

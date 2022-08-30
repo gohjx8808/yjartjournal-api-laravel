@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Http\Repositories\UserRepository;
 use App\Http\Requests\UpdateAccountDetailsRequest;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class UserService
@@ -18,8 +19,24 @@ class UserService
             'name' => $userDetails->name,
             'dob' => $userDetails->date_of_birth,
             'email' => $userDetails->email,
-            'gender' => $userDetails->gender,
+            'gender' => $userDetails->gender === User::MALE ? 'Male' : 'Female',
             'phoneNo' => $userDetails['country']->phone_code . $userDetails->phone_number,
+        ];
+    }
+
+    public static function getEditDetails()
+    {
+        $userId = Auth::id();
+        $userDetails = UserRepository::getUserById($userId);
+
+        return [
+            'id' => $userDetails->id,
+            'name' => $userDetails->name,
+            'dob' => $userDetails->date_of_birth,
+            'email' => $userDetails->email,
+            'gender' => $userDetails->gender,
+            'countryCodeId' => $userDetails['country']->id,
+            'phoneNo' => $userDetails->phone_number,
         ];
     }
 

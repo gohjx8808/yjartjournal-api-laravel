@@ -14,6 +14,13 @@ class UserController extends Controller
         return response($response);
     }
 
+    public static function getEditDetails()
+    {
+        $response = UserService::getEditDetails();
+
+        return response($response);
+    }
+
     public static function updateAccountDetails(UpdateAccountDetailsRequest $request)
     {
         $response = UserService::updateAccountDetails($request);

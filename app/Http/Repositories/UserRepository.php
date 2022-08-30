@@ -17,10 +17,10 @@ class UserRepository
     public static function updateUserDetails(int $userId, UpdateAccountDetailsRequest $request)
     {
         User::find($userId)->update([
-            'name' => $request->fullName,
+            'name' => $request->name,
             'gender' => $request->gender,
-            'country_id' => $request->countryCode,
-            'phone_number' => $request->phoneNumber,
+            'country_id' => $request->countryCodeId,
+            'phone_number' => $request->phoneNo,
             'date_of_birth' => Carbon::parse($request->dob),
         ]);
     }
